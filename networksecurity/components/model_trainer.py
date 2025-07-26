@@ -7,7 +7,7 @@ from networksecurity.logging.logger import logging
 from networksecurity.entity.artifact_entity import DataTransformationArtifact,ModelTrainerArtifact
 from networksecurity.entity.config_entity import ModelTrainerConfig
 
-import mlflow
+
 
 from networksecurity.utils.ml_utils.model.estimator import NetworkModel
 from networksecurity.utils.main_utils.utils import save_object,load_object
@@ -23,6 +23,11 @@ from sklearn.ensemble import (
     GradientBoostingClassifier,
     RandomForestClassifier,
 )
+
+import mlflow
+import dagshub
+dagshub.init(repo_owner='samalavenkatesh', repo_name='NetworkSecurity_ML', mlflow=True)
+
 
 class ModelTrainer:
     def __init__(self,model_trainer_config:ModelTrainerConfig,data_transformation_artifact:DataTransformationArtifact):
@@ -111,8 +116,9 @@ class ModelTrainer:
 
         Network_Model=NetworkModel(preprocessor=preprocessor,model=best_model)
         save_object(self.model_trainer_config.trained_model_file_path,obj=NetworkModel)
+
         #model pusher
-        # save_object("final_model/model.pkl",best_model) 
+        save_object("final_model/model.pkl",best_model,) 
         
 
         ## Model Trainer Artifact
